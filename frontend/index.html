@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智途无忧 - 基于高德开发平台的AI智能助手</title>
+    <meta name="description" content="智途无忧 - 基于高德开发平台的AI智能助手，一句话生成个性化行程">
+
+    <!-- 高德地图JS API -->
+    <script src="https://webapi.amap.com/maps?v=2.0&key=d8b259a9fe4023f2c7b746f334505b70&plugin=AMap.Scale"></script>
+
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/timeline.css">
+    <link rel="stylesheet" href="css/chat.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- 顶部导航 -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">🧭</span>
+                <span class="logo-text">智途无忧</span>
+            </div>
+            <!-- 标签页导航 -->
+            <nav class="tab-nav">
+                <button class="tab-btn active" data-tab="chat">
+                    <span class="tab-icon">💬</span>
+                    <span class="tab-text">对话</span>
+                </button>
+                <button class="tab-btn" data-tab="map">
+                    <span class="tab-icon">🗺️</span>
+                    <span class="tab-text">地图</span>
+                </button>
+                <button class="tab-btn" data-tab="trips">
+                    <span class="tab-icon">📋</span>
+                    <span class="tab-text">我的行程</span>
+                </button>
+            </nav>
+            <div class="header-actions">
+                <button class="help-btn" title="帮助">❓</button>
+            </div>
+        </header>
+
+        <!-- 主要内容区 - 标签页容器 -->
+        <main class="tab-content-container">
+
+            <!-- 对话标签页 -->
+            <div class="tab-content active" id="tab-chat">
+                <div class="chat-page-layout">
+                    <!-- 左侧边栏 -->
+                    <aside class="chat-sidebar" id="chatSidebar">
+                        <div class="sidebar-header">
+                            <button id="newChatBtn" class="new-chat-btn-sidebar">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 5v14M5 12h14"/>
+                                </svg>
+                                <span>新建对话</span>
+                            </button>
+                            <button id="toggleSidebarBtn" class="toggle-sidebar-btn" title="收起侧边栏">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="sidebar-content">
+                            <div class="conversation-list" id="conversationList">
+                                <!-- 对话历史由JS动态生成 -->
+                            </div>
+                        </div>
+                        <div class="sidebar-footer">
+                            <div class="sidebar-brand">
+                                <span class="brand-icon">🧭</span>
+                                <span class="brand-text">智途无忧</span>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- 侧边栏收起时的展开按钮 -->
+                    <button id="expandSidebarBtn" class="expand-sidebar-btn hidden" title="展开侧边栏">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 5l7 7-7 7M6 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+
+                    <!-- 主对话区域 -->
+                    <div class="chat-main">
+                        <div class="chat-container">
+                            <!-- 聊天消息区域 -->
+                            <div class="chat-messages" id="chatMessages">
+                                <!-- 欢迎消息 -->
+                                <div class="message ai-message">
+                                    <div class="message-avatar">
+                                        <div class="avatar-icon ai-avatar">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/>
+                                                <circle cx="7.5" cy="14.5" r="1.5"/>
+                                                <circle cx="16.5" cy="14.5" r="1.5"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="message-content">
+                                        <div class="message-text">
+                                            你好！我是智途无忧AI助手 👋<br><br>
+                                            告诉我你想去哪里旅行，我来帮你规划行程。你可以这样说：
+                                            <ul class="suggestion-list">
+                                                <li>我想去大连玩3天</li>
+                                                <li>周末带爸妈逛北京，老人家腿脚不好</li>
+                                                <li>两天一夜成都游，想吃火锅</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 快捷示例 -->
+                            <div class="quick-suggestions" id="quickSuggestions">
+                                <button class="suggestion-chip" data-text="周末带小孩去科技馆玩">🧒 遛娃</button>
+                                <button class="suggestion-chip" data-text="两天一夜成都游，想吃火锅">🍲 美食游</button>
+                                <button class="suggestion-chip" data-text="情侣约会，找个浪漫的地方">💑 约会</button>
+                                <button class="suggestion-chip" data-text="我想去大连玩3天">🌊 海滨游</button>
+                            </div>
+
+                            <!-- 输入区域 -->
+                            <div class="chat-input-container">
+                                <div class="chat-input-wrapper">
+                                    <textarea id="chatInput" class="chat-input" placeholder="输入你的旅行需求..." rows="1"></textarea>
+                                    <button id="sendBtn" class="send-btn" title="发送">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 地图标签页 -->
+            <div class="tab-content" id="tab-map">
+                <div class="map-page-container">
+                    <!-- 左侧面板 - 行程详情 -->
+                    <aside class="left-panel">
+                        <!-- 无行程提示 -->
+                        <div id="noTripHint" class="no-trip-hint">
+                            <div class="hint-icon">🗺️</div>
+                            <h3>暂无行程</h3>
+                            <p>在"对话"标签页中告诉我你的旅行计划，我来帮你规划行程</p>
+                            <button class="go-chat-btn" onclick="switchTab('chat')">开始对话</button>
+                        </div>
+
+                        <!-- 行程结果 -->
+                        <section id="tripResult" class="trip-result hidden">
+                            <!-- AI 旅行智囊 -->
+                            <div id="aiInsights" class="ai-insights-panel glass hidden">
+                                <div class="insights-header">
+                                    <span class="insights-icon">💡</span>
+                                    <span class="insights-title">AI 旅行智囊团</span>
+                                </div>
+                                <div class="insights-grid">
+                                    <div class="insight-column">
+                                        <div class="insight-label">🧳 必备清单</div>
+                                        <ul id="packingList" class="insight-list"></ul>
+                                    </div>
+                                    <div class="insight-column">
+                                        <div class="insight-label">😋 地道美食</div>
+                                        <ul id="delicaciesList" class="insight-list"></ul>
+                                    </div>
+                                    <div class="insight-column">
+                                        <div class="insight-label">💡 专业建议</div>
+                                        <ul id="proTipsList" class="insight-list"></ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 行程摘要 -->
+                            <div class="trip-summary">
+                                <h3 id="tripTitle" class="trip-title">北京一日游</h3>
+                                <p id="tripSummaryText" class="trip-summary-text"></p>
+
+                                <!-- 天气卡片 -->
+                                <div id="weatherCard" class="weather-card">
+                                    <span class="weather-icon">☀️</span>
+                                    <span class="weather-text">晴 25°C</span>
+                                </div>
+                            </div>
+
+                            <!-- 统计数据 -->
+                            <div class="trip-stats">
+                                <div class="stat-item">
+                                    <span class="stat-value" id="totalDuration">0</span>
+                                    <span class="stat-label">小时</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="totalDistance">0</span>
+                                    <span class="stat-label">公里</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="totalCost">0</span>
+                                    <span class="stat-label">元/人</span>
+                                </div>
+                            </div>
+
+                            <!-- 天数切换标签 -->
+                            <div class="day-scroll-wrapper hidden" id="dayTabsWrapper">
+                                <div class="day-scroll-tabs" id="dayTabs">
+                                    <!-- JS动态生成 -->
+                                </div>
+                            </div>
+
+                            <!-- 每日摘要 -->
+                            <div id="daySummary" class="day-summary hidden"></div>
+
+                            <!-- 时间轴 -->
+                            <div class="timeline-container">
+                                <h4 class="timeline-title">📅 行程安排</h4>
+                                <div id="timeline" class="timeline">
+                                    <!-- 时间轴内容由JS动态生成 -->
+                                </div>
+                            </div>
+
+                            <!-- 操作按钮 -->
+                            <div class="action-buttons">
+                                <button class="action-btn primary" id="openAmapBtn">
+                                    <span>📍</span> 打开地图
+                                </button>
+                                <button class="action-btn secondary" id="saveTripBtn">
+                                    <span>💾</span> 保存行程
+                                </button>
+                                <button class="action-btn secondary" id="shareBtn">
+                                    <span>📤</span> 分享
+                                </button>
+                            </div>
+                        </section>
+                    </aside>
+
+                    <!-- 右侧地图区域 -->
+                    <div class="map-container">
+                        <div id="mapView" class="map-view"></div>
+
+                        <!-- 地图控制按钮 -->
+                        <div class="map-controls">
+                            <button class="map-control-btn active-3d" id="toggle3DBtn" title="切换3D视角">3D</button>
+                            <button class="map-control-btn active-traffic" id="toggleTrafficBtn" title="实时路况">🚦</button>
+                            <button class="map-control-btn" id="zoomInBtn" title="放大">+</button>
+                            <button class="map-control-btn" id="zoomOutBtn" title="缩小">-</button>
+                            <button class="map-control-btn" id="locateBtn" title="定位">📍</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 我的行程标签页 -->
+            <div class="tab-content" id="tab-trips">
+                <div class="trips-page-container">
+                    <div class="trips-header">
+                        <h2 class="trips-title">我的行程</h2>
+                    </div>
+                    <div id="tripGrid" class="trip-grid">
+                        <!-- JS动态生成 -->
+                        <div class="loading-spinner" style="margin: 40px auto;"></div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- 引入JS -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js?v=3"></script>
+    <script src="js/map.js"></script>
+    <script src="js/timeline.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/app.js?v=2"></script>
+</body>
+
+</html>

@@ -1,0 +1,354 @@
+/* ========================================
+   时间轴样式
+   ======================================== */
+
+.timeline {
+    position: relative;
+    padding-left: 24px;
+}
+
+/* 时间轴竖线 */
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--primary-color) 0%, var(--border-color) 100%);
+}
+
+/* 时间轴项目 */
+.timeline-item {
+    position: relative;
+    padding-bottom: 24px;
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 动画延迟 */
+.timeline-item:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.timeline-item:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.timeline-item:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.timeline-item:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.timeline-item:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.timeline-item:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+/* 时间点圆点 */
+.timeline-dot {
+    position: absolute;
+    left: -24px;
+    top: 4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    border: 3px solid white;
+    box-shadow: var(--shadow-md);
+    z-index: 1;
+}
+
+.timeline-item.transport .timeline-dot {
+    background: var(--success-color);
+}
+
+/* POI卡片 */
+.timeline-poi-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-fast);
+    cursor: pointer;
+}
+
+.timeline-poi-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
+    transform: translateX(4px);
+}
+
+/* POI头部 */
+.poi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.poi-time {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--primary-color);
+    background: var(--primary-light);
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.poi-duration {
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+/* POI信息 */
+.poi-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.poi-type {
+    display: inline-block;
+    font-size: 12px;
+    color: var(--text-secondary);
+    background: var(--bg-color);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+}
+
+.poi-address {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 8px;
+}
+
+/* POI底部信息 */
+.poi-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border-color);
+}
+
+.poi-cost {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--warning-color);
+}
+
+.poi-action {
+    font-size: 12px;
+    color: var(--primary-color);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.poi-action:hover {
+    text-decoration: underline;
+}
+
+/* 交通卡片 */
+.timeline-transport-card {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    border: 1px solid #bbf7d0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.transport-icon {
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 50%;
+    box-shadow: var(--shadow-sm);
+}
+
+.transport-info {
+    flex: 1;
+}
+
+.transport-mode {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.transport-detail {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.transport-cost {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--success-color);
+}
+
+/* 交通方式图标样式 */
+.transport-icon.walking {
+    background: #fef3c7;
+}
+
+.transport-icon.transit {
+    background: #dbeafe;
+}
+
+.transport-icon.driving {
+    background: #f3e8ff;
+}
+
+.transport-icon.riding {
+    background: #dcfce7;
+}
+
+/* 每日分隔 */
+.timeline-day-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.day-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 16px;
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.day-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+/* 每日统计 */
+.timeline-day-summary {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: var(--bg-color);
+    border-radius: var(--radius-md);
+    display: flex;
+    justify-content: space-around;
+}
+
+.day-stat {
+    text-align: center;
+}
+
+.day-stat-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.day-stat-label {
+    font-size: 11px;
+    color: var(--text-light);
+}
+
+/* ========================================
+   POI 操作按钮
+   ======================================== */
+.poi-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+.poi-action-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+/* 导航按钮 */
+.poi-action-btn.nav-btn {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+}
+
+.poi-action-btn.nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+/* 打车按钮 */
+.poi-action-btn.taxi-btn {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
+
+.poi-action-btn.taxi-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+/* 地图按钮 */
+.poi-action-btn.map-btn {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.poi-action-btn.map-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* 按钮点击效果 */
+.poi-action-btn:active {
+    transform: translateY(0);
+}
